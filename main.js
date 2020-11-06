@@ -41,9 +41,9 @@ const pool = mysql.createPool({
 })
 
 // SQL Queries
-const SQL_GET_TITLE = 'select title from goodreads.book2018 where title like ? order by title asc limit 10 offset ?';
+const SQL_GET_TITLE = 'select title, book_id from goodreads.book2018 where title like ? order by title asc limit 10 offset ?';
 const SQL_GET_TITLE_TOTAL = 'select count(*) as totalCount from goodreads.book2018 where title like ?';
-const SQL_GET_TITLE_DETAIL = 'select * from goodreads.book2018 where title like ?';
+const SQL_GET_TITLE_DETAIL = 'select * from goodreads.book2018 where book_id like ?';
 
 const letterArr = 'abcdefghijklmnopqrstuvwxyz'.split('');
 const numArr = '0123456789'.split('');
@@ -114,6 +114,8 @@ app.get('/titles/:titleStart', async (req, res) => {
 
         const results = await getBookByTitle([titleStart, offsetBy]);
 
+        console.log('RESSDFSDFSFDS  ', results);
+
         const totalPages = Math.ceil(totalResults / setLimit)
 
         let page = offsetBy / setLimit + 1
@@ -141,11 +143,11 @@ app.get('/titles/:titleStart', async (req, res) => {
 });
 
 // Title Details Page
-app.get('/details/:bookTitle', async (req, res) => {
+app.get('/details/:bookID', async (req, res) => {
     try {
-        const bookTitle = req.params.bookTitle;
+        const bookID = req.params.bookID;
 
-        const results = await getTitleDetail([bookTitle]);
+        const results = await getTitleDetail([bookID]);
 
         res.status(200);
         res.format({
@@ -160,12 +162,12 @@ app.get('/details/:bookTitle', async (req, res) => {
                 res.json({
                     bookId: results[0].book_id,
                     title: results[0].title,
-                    authors: results[0].authors,
+                    authors: results[0].authors.split('|'),
                     summary: results[0].description,
                     pages: results[0].pages,
                     rating: results[0].rating,
                     ratingCount: results[0].rating_count,
-                    genre: results[0].genres
+                    genre: results[0].genres.split('|')
                 });
             },
             'default': () => {
