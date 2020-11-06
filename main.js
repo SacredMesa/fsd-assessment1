@@ -209,6 +209,13 @@ app.get('/reviews/:bookTitle', async (req, res) => {
     }
 });
 
+// Redirect for incorrect URL
+app.use((req, res) => {
+    res.status(404);
+    res.type('text/html');
+    res.redirect('/');
+});
+
 // Start Connection Pool and Server
 const startApp = async (app, pool) => {
     try {
