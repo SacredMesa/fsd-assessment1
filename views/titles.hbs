@@ -1,7 +1,24 @@
 <table class="table">
-{{#each}}
-<tr>
-  <td>{{titleResults}}</td>
-</tr>
-{{/each}}
+  {{#each titleResults}}
+    <tr>
+      <td>{{this.title}}</td>
+    </tr>
+  {{/each}}
 </table>
+
+<nav class="d-flex justify-content-end btn-group">
+
+  {{#if prevPage}}
+    <form action="/titles/{{searchLetter}}" method="get">
+      <input type="hidden" name="offset" value="{{prevOffset}}">
+      <button type="submit" class="btn btn-secondary mx-1">Previous</button>
+    </form>
+  {{/if}}
+  {{#if nextPage}}
+    <form action="/titles/{{searchLetter}}" method="get">
+      <input type="hidden" name="offset" value="{{nextOffset}}">
+      <button type="submit" class="btn btn-secondary mx-1">Next</button>
+    </form>
+  {{/if}}
+
+</nav>

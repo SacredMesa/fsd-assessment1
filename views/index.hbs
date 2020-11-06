@@ -1,0 +1,27 @@
+<div class="letter-btns d-flex justify-content-between">
+
+  {{#each letterArr}}
+
+    <form action="/titles/{{this}}" method="GET">
+      <div class="form-group">
+        <button type="submit" value="{{this}}" class="btn btn-primary">{{this}}</button>
+      </div>
+    </form>
+
+  {{/each}}
+
+</div>
+
+<div class="num-btns d-flex justify-content-between">
+
+  {{#each numArr}}
+
+    <form action="/titles/{{this}}" method="GET">
+      <div class="form-group">
+        <button type="submit" value="{{this}}" class="btn btn-secondary">{{this}}</button>
+      </div>
+    </form>
+
+  {{/each}}
+
+</div>
