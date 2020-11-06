@@ -45,7 +45,7 @@ const SQL_GET_TITLE = 'select title, book_id from goodreads.book2018 where title
 const SQL_GET_TITLE_TOTAL = 'select count(*) as totalCount from goodreads.book2018 where title like ?';
 const SQL_GET_TITLE_DETAIL = 'select * from goodreads.book2018 where book_id like ?';
 
-const letterArr = 'abcdefghijklmnopqrstuvwxyz'.split('');
+const letterArr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 const numArr = '0123456789'.split('');
 
 // SQL Query creator function
@@ -113,8 +113,6 @@ app.get('/titles/:titleStart', async (req, res) => {
         totalResults = totalResults[0].totalCount;
 
         const results = await getBookByTitle([titleStart, offsetBy]);
-
-        console.log('RESSDFSDFSFDS  ', results);
 
         const totalPages = Math.ceil(totalResults / setLimit)
 
