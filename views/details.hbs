@@ -1,8 +1,5 @@
 <!-- {{#each bookDetails}} -->
-<div class="header-container">
-  <h1>{{title}}</h1>
-  <h2>by {{authors}}</h2>
-</div>
+
 
 <div class="details-container d-flex justify-content-between">
   <div class="left-side">
@@ -25,6 +22,8 @@
         </tr>
         <tr>
           <td>
+            Genres:
+            <br>
             {{genres}}
           </td>
         </tr>
@@ -35,6 +34,14 @@
   <div class="right-side">
     <table class="table table-borderless">
       <tbody>
+        <tr>
+          <td>
+            <div class="header-container">
+              <h1 class="detail-title">{{title}}</h1>
+              <h2>by {{authors}}</h2>
+            </div>
+          </td>
+        </tr>
         <tr>
           <td>
             {{description}}

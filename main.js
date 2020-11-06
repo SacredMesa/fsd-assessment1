@@ -142,21 +142,41 @@ app.get('/titles/:titleStart', async (req, res) => {
 
 // Title Details Page
 app.get('/details/:bookTitle', async (req, res) => {
-
-    const bookTitle = req.params.bookTitle;
-
     try {
+        const bookTitle = req.params.bookTitle;
+
         const results = await getTitleDetail([bookTitle]);
 
-        const genrelist = results[0].genres.split('|');
+        const genreList = results[0].genres.split('|');
 
-        console.log('BOOK genres: ', genrelist);
+        console.log('BOOK genres: ', genreList);
 
         res.status(200);
-        res.type('text/html');
-        res.render('details', {
-            bookDetails: results,
-            genreTypes: genrelist
+
+        res.format({
+            'text/html': () => {
+                res.render('details', {
+                    bookDetails: results,
+                    genreTypes: genreList
+                });
+            },
+            'application/json': () => {
+                res.json({
+                    bookId: results[0].book_id,
+                    title: results[0].title,
+                    authors: results[0].authors,
+                    summary: results[0].description,
+                    pages: results[0].pages,
+                    rating: results[0].rating,
+                    ratingCount: results[0].rating_count,
+                    genre: genreList
+                });
+            },
+            'default': () => {
+                res.status(406);
+                res.type('text/plain');
+                res.send(`Not supported: ${req.get("Accept")}`);
+            }
         });
 
     } catch (e) {

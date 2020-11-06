@@ -17,13 +17,13 @@
   {{#if prevPage}}
     <form action="/titles/{{searchLetter}}" method="get">
       <input type="hidden" name="offset" value="{{prevOffset}}">
-      <button type="submit" class="btn btn-secondary mx-1">Previous</button>
+      <button type="submit" class="btn btn-primary mx-1">Previous</button>
     </form>
   {{/if}}
   {{#if nextPage}}
     <form action="/titles/{{searchLetter}}" method="get">
       <input type="hidden" name="offset" value="{{nextOffset}}">
-      <button type="submit" class="btn btn-secondary mx-1">Next</button>
+      <button type="submit" class="btn btn-primary mx-1">Next</button>
     </form>
   {{/if}}
 
