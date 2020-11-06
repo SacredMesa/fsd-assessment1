@@ -1,10 +1,16 @@
 <table class="table">
   {{#each titleResults}}
     <tr>
-      <td>{{this.title}}</td>
+      <td><a href="/details/{{this.title}}">{{this.title}}</a></td>
     </tr>
   {{/each}}
 </table>
+
+<div class="home-btn-container">
+  <form class="form-group float-left" action="/" method="get">
+          <button type="submit" class="btn btn-warning">Home</button>
+  </form>
+</div>
 
 <nav class="d-flex justify-content-end btn-group">
 

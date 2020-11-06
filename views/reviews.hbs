@@ -1,0 +1,54 @@
+{{#if numReviews}}
+<h1 class="h1">No Reviews Found :(</h1>
+
+<div class="home-btn-container">
+  <form class="form-group float-left" action="/" method="get">
+          <button type="submit" class="btn btn-warning">Home</button>
+  </form>
+</div>
+
+{{else}}
+{{#each results}}
+  <table class="table ">
+
+    <thead>
+      <tr>
+        <td>
+          <h4>{{this.book_title}}</h4>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h5>by <em>{{this.book_author}}</em></h5>
+        </td>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          Reviewer: {{this.byline}}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Date: {{this.publication_dt}}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Summary:
+          <br>
+          {{this.summary}}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <a href="{{this.url}}">Read Full Review</a>
+        </td>
+      </tr>
+    </tbody>
+
+  </table>
+{{/each}}
+{{/if}}

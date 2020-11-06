@@ -1,0 +1,60 @@
+<!-- {{#each bookDetails}} -->
+<div class="header-container">
+  <h1>{{title}}</h1>
+  <h2>by {{authors}}</h2>
+</div>
+
+<div class="details-container d-flex justify-content-between">
+  <div class="left-side">
+    <table class="table table-borderless">
+      <tbody>
+        <tr>
+          <td>
+            <img src="{{image_url}}" alt="Book Cover">
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Pages: {{pages}}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Rating: {{rating}} ({{rating_count}})
+          </td>
+        </tr>
+        <tr>
+          <td>
+            {{genres}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="right-side">
+    <table class="table table-borderless">
+      <tbody>
+        <tr>
+          <td>
+            {{description}}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="/reviews/{{title}}">Find Review</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+</div>
+
+<div class="home-btn-container">
+  <form class="form-group float-left" action="/" method="get">
+    <button type="submit" class="btn btn-secondary">Home</button>
+  </form>
+</div>
+<!-- {{/each}} -->

@@ -10,6 +10,8 @@ const morgan = require('morgan')
 const app = express();
 
 // Express configuration
+app.use(morgan('combined'))
+
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/static'));
 
@@ -40,7 +42,8 @@ const pool = mysql.createPool({
 
 // SQL Queries
 const SQL_GET_TITLE = 'select title from goodreads.book2018 where title like ? order by title asc limit 10 offset ?';
-const SQL_GET_TITLE_TOTAL = 'select count(*) as totalCount from goodreads.book2018 where title like ?'
+const SQL_GET_TITLE_TOTAL = 'select count(*) as totalCount from goodreads.book2018 where title like ?';
+const SQL_GET_TITLE_DETAIL = 'select * from goodreads.book2018 where title like ?';
 
 const letterArr = 'abcdefghijklmnopqrstuvwxyz'.split('');
 const numArr = '0123456789'.split('');
@@ -53,7 +56,6 @@ const mkQuery = (sqlQuery, pool) => {
 
         try {
             const results = await pool.query(sqlQuery, params)
-            console.log('THIS IS RESULTS: ', results[0]);
             return results[0];
         } catch (e) {
             return Promise.reject(e);
@@ -67,6 +69,25 @@ const mkQuery = (sqlQuery, pool) => {
 // SQL Query functions
 const getBookByTitle = mkQuery(SQL_GET_TITLE, pool);
 const getBookByTitleTotal = mkQuery(SQL_GET_TITLE_TOTAL, pool);
+const getTitleDetail = mkQuery(SQL_GET_TITLE_DETAIL, pool);
+
+// API Queries
+const getReviews = async (bookTitle) => {
+    const url = withQuery(
+        ENDPOINT, {
+            'api-key': API_KEY,
+            title: bookTitle || " "
+        }
+    );
+    let result = await fetch(url);
+    try {
+        let rawResult = await result.json();
+        return rawResult;
+    } catch (e) {
+        console.error('ERROR');
+        return Promise.reject(e);
+    }
+};
 
 // Request handlers
 // Homepage
@@ -85,10 +106,6 @@ app.get('/titles/:titleStart', async (req, res) => {
     const searchLetter = req.params.titleStart;
     const titleStart = req.params.titleStart + '%';
 
-    // const conn = await pool.getConnection(); // TESTING
-
-    console.log('this is from button: ', req.params.titleStart);
-
     try {
         const setLimit = 10
         const offsetBy = parseInt(req.query['offset']) || 0
@@ -97,32 +114,12 @@ app.get('/titles/:titleStart', async (req, res) => {
 
         const results = await getBookByTitle([titleStart, offsetBy]);
 
-        // let results = await conn.query(SQL_GET_TITLE, 'a%'); //TESTING
-        // const recs = results[0];
-
-        console.log('END RESULTS: ', results);
-        console.log('TOTAL RESULTS: ', totalResults);
-
-        // if (recs.length <= 0) {
-        //     res.status(404);
-        //     res.type('text/html');
-        //     res.send(`Books starting with ${searchLetter} not found`);
-        //     return
-        // }
-
         const totalPages = Math.ceil(totalResults / setLimit)
-        console.info('number of pages: ', totalPages)
 
         let page = offsetBy / setLimit + 1
-        console.info('offset', offsetBy)
-        console.info('limit: ', setLimit)
-        console.info('page: ', page)
 
         const prevPage = (page > 1) ? 'Previous' : ''
         const nextPage = (page < totalPages) ? 'Next' : ''
-
-        console.info('p:', prevPage)
-        console.info('n:', nextPage)
 
         res.status(200);
         res.type('text/html');
@@ -141,10 +138,68 @@ app.get('/titles/:titleStart', async (req, res) => {
         res.type('text/html');
         res.send(JSON.stringify(e));
     }
-
-
 });
 
+// Title Details Page
+app.get('/details/:bookTitle', async (req, res) => {
+
+    const bookTitle = req.params.bookTitle;
+
+    try {
+        const results = await getTitleDetail([bookTitle]);
+
+        const genrelist = results[0].genres.split('|');
+
+        console.log('BOOK genres: ', genrelist);
+
+        res.status(200);
+        res.type('text/html');
+        res.render('details', {
+            bookDetails: results,
+            genreTypes: genrelist
+        });
+
+    } catch (e) {
+        console.info(e)
+        res.status(500);
+        res.type('text/html');
+        res.send(JSON.stringify(e));
+    }
+});
+
+// Book Review Page
+app.get('/reviews/:bookTitle', async (req, res) => {
+
+    const bookTitle = req.params.bookTitle;
+
+    console.log('this is title: ', req.params.bookTitle);
+
+    try {
+        const resultsRaw = await getReviews(bookTitle);
+
+        console.log('BOOK reviews: ', resultsRaw);
+
+        const numReviews = (resultsRaw.num_results) > 0 ? false : true
+
+        console.log('Number of Reviews: ', numReviews);
+
+        const results = resultsRaw.results;
+
+        console.log('RESULTS: ', results);
+
+        res.status(200);
+        res.type('text/html');
+        res.render('reviews', {
+            results,
+            numReviews
+        });
+    } catch (e) {
+        console.info(e)
+        res.status(500);
+        res.type('text/html');
+        res.send(JSON.stringify(e));
+    }
+});
 
 // Start Connection Pool and Server
 const startApp = async (app, pool) => {

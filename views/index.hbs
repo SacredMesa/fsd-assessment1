@@ -2,7 +2,7 @@
 
   {{#each letterArr}}
 
-    <form action="/titles/{{this}}" method="GET">
+    <form action="/titles/{{this}}" method="get">
       <div class="form-group">
         <button type="submit" value="{{this}}" class="btn btn-primary">{{this}}</button>
       </div>
@@ -16,7 +16,7 @@
 
   {{#each numArr}}
 
-    <form action="/titles/{{this}}" method="GET">
+    <form action="/titles/{{this}}" method="get">
       <div class="form-group">
         <button type="submit" value="{{this}}" class="btn btn-secondary">{{this}}</button>
       </div>
