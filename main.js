@@ -165,7 +165,7 @@ app.get('/details/:bookTitle', async (req, res) => {
                     pages: results[0].pages,
                     rating: results[0].rating,
                     ratingCount: results[0].rating_count,
-                    genre: genreList
+                    genre: results[0].genres
                 });
             },
             'default': () => {
