@@ -1,0 +1,8 @@
+.header-container {
+  display: block;
+  width: 700px;
+  margin-right: auto;
+  margin-left: auto;
+  padding: 20px;
+  text-align: center;
+}
