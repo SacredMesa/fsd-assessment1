@@ -147,17 +147,13 @@ app.get('/details/:bookTitle', async (req, res) => {
 
         const results = await getTitleDetail([bookTitle]);
 
-        const genreList = results[0].genres.split('|');
-
-        console.log('BOOK genres: ', genreList);
-
         res.status(200);
-
         res.format({
             'text/html': () => {
                 res.render('details', {
-                    bookDetails: results,
-                    genreTypes: genreList
+                    bookDetails: results[0],
+                    authors: results[0].authors.split('|').join(', '),
+                    genreTypes: results[0].genres.split('|').join(', ')
                 });
             },
             'application/json': () => {
@@ -192,20 +188,12 @@ app.get('/reviews/:bookTitle', async (req, res) => {
 
     const bookTitle = req.params.bookTitle;
 
-    console.log('this is title: ', req.params.bookTitle);
-
     try {
         const resultsRaw = await getReviews(bookTitle);
 
-        console.log('BOOK reviews: ', resultsRaw);
-
         const numReviews = (resultsRaw.num_results) > 0 ? false : true
 
-        console.log('Number of Reviews: ', numReviews);
-
         const results = resultsRaw.results;
-
-        console.log('RESULTS: ', results);
 
         res.status(200);
         res.type('text/html');
